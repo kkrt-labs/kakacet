@@ -1,16 +1,41 @@
 import * as starknet from 'starknet';
 import erc20Json from './erc20_abi.json' assert { type: 'json' };
 
-const eth_address = process.env.TOKEN_ADDRESS;
-const address = process.env.STARKNET_ACCOUNT_ADDRESS;
+function getEnvVariable(name, defaultValue) {
+    const value = process.env[name];
+    if (value !== undefined) {
+        return value;
+    } else if (defaultValue !== undefined) {
+        return defaultValue;
+    } else {
+        throw new Error(`${name} environment variable is not defined`);
+    }
+}
+
+const ethTokenAddress = getEnvVariable('TOKEN_ADDRESS');
+const address = getEnvVariable('STARKNET_ACCOUNT_ADDRESS');
+const kakarotAddress = getEnvVariable('KAKAROT_ADDRESS');
+const rpcUrl = getEnvVariable('RPC_URL');
+const privateKey = getEnvVariable('PRIVATE_KEY');
 
 const provider = new starknet.RpcProvider({
-    nodeUrl: process.env.RPC_URL,
+    nodeUrl: rpcUrl,
 });
 
-const account = new starknet.Account(provider, address, process.env.PRIVATE_KEY);
+const account = new starknet.Account(provider, address, privateKey);
 
-const contract = new starknet.Contract(erc20Json, eth_address, provider);
+const contract = new starknet.Contract(erc20Json, ethTokenAddress, provider);
+
+export async function getStarknetEoaAddress(ethAddress) {
+    console.log('call kakarot.compute_starknet_address - ', ethAddress);
+    const callResponse = await provider.callContract({
+        contractAddress: kakarotAddress,
+        entrypoint: 'compute_starknet_address',
+        calldata: [ethAddress],
+    });
+
+    return callResponse.result[0];
+} 
 
 export async function transfer(to) {
     console.log('Transfer to - ', to);

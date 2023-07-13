@@ -1,4 +1,4 @@
-import { transfer, balanceOf } from './onchain.js';
+import { balanceOf, getStarknetEoaAddress, transfer } from './onchain.js';
 
 export function initRoutes(app) {
     app.get('/health', async (req, res) => {
@@ -12,7 +12,8 @@ export function initRoutes(app) {
                 return res.status(400).json({ message: 'Missing "to" address in request body.' });
             }
 
-            const txHash = await transfer(toAddress);
+            const starknetEoaAddress = await getStarknetEoaAddress(toAddress)
+            const txHash = await transfer(starknetEoaAddress);
 
             return res.json({ message: `Transfer successful. Transaction hash: ${txHash}`, hash: txHash });
         } catch (error) {
@@ -27,8 +28,8 @@ export function initRoutes(app) {
             if (!ofAddress) {
                 return res.status(400).json({ message: 'Missing "of" address in request body.' });
             }
-
-            const balance = await balanceOf(ofAddress);
+            const starknetEoaAddress = await getStarknetEoaAddress(ofAddress)
+            const balance = await balanceOf(starknetEoaAddress);
 
             return res.json({ message: `Query successful.`, balance: balance });
         } catch (error) {
