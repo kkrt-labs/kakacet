@@ -26,9 +26,11 @@ jobs:
           push: true
           tags: ghcr.io/kkrt-labs/kakacet/backend:latest
           context: ./backend
+          platforms: linux/amd64,linux/arm64
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
           push: true
           tags: ghcr.io/kkrt-labs/kakacet/frontend:latest
           context: ./frontend
+          platforms: linux/amd64,linux/arm64
