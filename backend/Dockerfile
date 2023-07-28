@@ -3,9 +3,9 @@ FROM node:18
 WORKDIR /usr/src/app
 
 COPY package.json ./
-COPY yarn.lock ./
+COPY package-lock.json ./
 
-RUN yarn install --production
+RUN npm install --production
 
 COPY . .
 

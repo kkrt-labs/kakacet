@@ -7,7 +7,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "http://localhost:3000", // React app is served from this origin
+    origin: "*",
   })
 );
 const port = 4000;

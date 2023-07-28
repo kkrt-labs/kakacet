@@ -1,16 +1,16 @@
 version: "3"
 services:
-  starkcet-front:
+  kakacet-front:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
       - 3000:3000
     depends_on:
-      - starkcet-back
+      - kakacet-back
     networks:
       - faucet
-  starkcet-back:
+  kakacet-back:
     build:
       context: ./backend
       dockerfile: Dockerfile
