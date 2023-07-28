@@ -25,4 +25,5 @@ jobs:
         with:
           push: true
           tags: ghcr.io/kkrt-labs/kakacet/frontend:latest
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
+          # platforms: linux/amd64,linux/arm64
