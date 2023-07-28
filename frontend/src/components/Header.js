@@ -1,20 +1,16 @@
-import './style/index.css'
-import kakarotLogo from '../assets/kakarot_logo.svg'
-import kakarotNameLogo from '../assets/kakarot_name_logo.svg'
-import styled from "styled-components"
-
+import styled from "styled-components";
+import kakarotNameLogo from "../assets/kakarot_name_logo.svg";
+import "./style/index.css";
 
 export default function Header() {
-
   return (
     <Main>
-       <MainTitle>
-         <Image src={kakarotNameLogo} alt="Avatar" />
+      <MainTitle>
+        <Image src={kakarotNameLogo} alt="Avatar" />
       </MainTitle>
-      <Navigation>
-      </Navigation>
+      <Navigation></Navigation>
     </Main>
-  )
+  );
 }
 
 const Main = styled.div`
@@ -25,7 +21,7 @@ const Main = styled.div`
   @media (max-width: 1000px) {
     padding: 0px 10px;
   }
-`
+`;
 
 const MainTitle = styled.h1`
   color: #2d2d71;
@@ -34,11 +30,7 @@ const MainTitle = styled.h1`
   @media (max-width: 1000px) {
     font-size: 30px;
   }
-`
-
-const EndTitle = styled.span`
-  font-weight: 500;
-`
+`;
 
 const Navigation = styled.div`
   display: flex;
@@ -47,8 +39,7 @@ const Navigation = styled.div`
   @media (max-width: 1000px) {
     gap: 10px;
   }
-`
-
+`;
 
 const Image = styled.img`
   width: 50px;
@@ -57,4 +48,4 @@ const Image = styled.img`
     width: 35px;
     height: 35px;
   }
-`
+`;
