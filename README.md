@@ -5,3 +5,6 @@ relies on the same backend.
 
 The only difference is that it accepts as input an EVM address, which is first
 converted to its Starknet address counterpart before calling the faucet.
+
+Use the [docker-compose.yml](./docker-compose.yml) to start the backend before
+the front end.
