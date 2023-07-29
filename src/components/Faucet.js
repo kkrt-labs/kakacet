@@ -24,21 +24,29 @@ async function getStarknetAddress(ethAddress) {
   return callResponse.result[0];
 }
 
+async function addressAlreadyDeployed(address) {
+  try {
+    await provider.getClassHashAt(address, "latest");
+    return true;
+  } catch (error) {
+    console.log("error", error);
+    return false;
+  }
+}
+
 async function makeTransfer(toAddress) {
   try {
-    const starknetAddress = await getStarknetAddress(toAddress);
     const response = await fetch("/faucet", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ to: starknetAddress }),
+      body: JSON.stringify({ to: toAddress }),
     });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-
     const data = await response.json();
 
     return data;
@@ -70,6 +78,28 @@ async function getBalanceOf(ofAddress) {
   }
 }
 
+async function deployKakarotAccount(ofAddress) {
+  try {
+    const response = await fetch("/deploy-kakarot-account", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ of: ofAddress }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    toast.info("EOA ready 🚀");
+    return data.balance;
+  } catch (error) {
+    toast.error(`Error in deployKakarotAccount: ${error.message}`);
+  }
+}
+
 function Faucet() {
   const [addressInput, setAddressInput] = useState("");
 
@@ -89,8 +119,13 @@ function Faucet() {
 
   async function sendToken() {
     assertAddressInputFormat();
-    const data = await makeTransfer(addressInput);
+    const starknetAddress = await getStarknetAddress(addressInput);
+    const data = await makeTransfer(starknetAddress);
     toast.info("Transaction hash: " + data.hash.transaction_hash);
+    const accountExists = await addressAlreadyDeployed(starknetAddress);
+    if (!accountExists) {
+      await deployKakarotAccount(addressInput);
+    }
   }
 
   async function getBalance() {
